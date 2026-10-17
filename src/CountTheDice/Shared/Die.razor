@@ -1,0 +1,24 @@
+@* A single die face drawn with CSS pips on a 3x3 grid. *@
+<div class="die die-@Value @(Rolling ? "rolling" : "")" style="--die-color: @Color" role="img" aria-label="Die showing @Value">
+    @for (var cell = 0; cell < 9; cell++)
+    {
+        <span class="pip @(Pips[Value].Contains(cell) ? "on" : "")"></span>
+    }
+</div>
+
+@code {
+    // Cell indexes in the 3x3 grid (0 = top-left, 8 = bottom-right) that hold a pip for each value.
+    private static readonly Dictionary<int, int[]> Pips = new()
+    {
+        [1] = [4],
+        [2] = [0, 8],
+        [3] = [0, 4, 8],
+        [4] = [0, 2, 6, 8],
+        [5] = [0, 2, 4, 6, 8],
+        [6] = [0, 2, 3, 5, 6, 8],
+    };
+
+    [Parameter] public int Value { get; set; } = 1;
+    [Parameter] public bool Rolling { get; set; }
+    [Parameter] public string Color { get; set; } = "#ff6b6b";
+}

@@ -1,0 +1,130 @@
+﻿@page "/"
+@using CountTheDice.Game
+@using CountTheDice.Shared
+
+<PageTitle>Count the Dice</PageTitle>
+
+<main class="game">
+    <header class="title">
+        <h1>Count the Dice!</h1>
+        <div class="stars" aria-label="@_stars stars">⭐ @_stars</div>
+    </header>
+
+    <nav class="levels" aria-label="Choose level">
+        @foreach (var level in DiceGame.Levels)
+        {
+            <button class="level-btn level-@level.Number @(level == _game.Level ? "active" : "")"
+                    @onclick="() => ChangeLevel(level)" disabled="@_rolling">
+                @level.Name
+                <small>@level.DiceCount dice</small>
+            </button>
+        }
+    </nav>
+
+    <section class="dice-tray" @onclick="Roll" title="Tap to roll new dice">
+        @for (var i = 0; i < _shownDice.Length; i++)
+        {
+            <Die Value="_shownDice[i]" Rolling="_rolling" Color="@DieColors[i % DieColors.Length]" />
+        }
+    </section>
+
+    <p class="question">How many dots are there in total?</p>
+
+    <section class="choices">
+        @foreach (var choice in _game.Choices)
+        {
+            var state = _solved && _game.IsCorrect(choice) ? "correct"
+                : _wrongPicks.Contains(choice) ? "wrong" : "";
+            <button class="choice @state" @onclick="() => Pick(choice)"
+                    disabled="@(_rolling || _solved || _wrongPicks.Contains(choice))">
+                @choice
+            </button>
+        }
+    </section>
+
+    <section class="feedback" aria-live="polite">
+        @if (_solved)
+        {
+            <div class="message success">
+                <span class="big-emoji">🎉</span>
+                <span>Super! @_game.Sum is right!</span>
+            </div>
+            <button class="roll-btn" @onclick="Roll">🎲 Roll again!</button>
+        }
+        else if (_lastWrong is not null)
+        {
+            <div class="message try-again" @key="_wrongPicks.Count">
+                <span class="big-emoji">🤔</span>
+                <span>Not @_lastWrong. Try again!</span>
+            </div>
+        }
+    </section>
+
+    @if (_solved)
+    {
+        <div class="confetti" aria-hidden="true">
+            @for (var i = 0; i < 24; i++)
+            {
+                <span style="--i:@i"></span>
+            }
+        </div>
+    }
+</main>
+
+@code {
+    private static readonly string[] DieColors = ["#ff6b6b", "#4dabf7", "#51cf66"];
+
+    private readonly DiceGame _game = new();
+    private readonly HashSet<int> _wrongPicks = [];
+    private int[] _shownDice = [];
+    private bool _rolling;
+    private bool _solved;
+    private int? _lastWrong;
+    private int _stars;
+
+    protected override async Task OnInitializedAsync() => await Roll();
+
+    private async Task ChangeLevel(GameLevel level)
+    {
+        if (level == _game.Level) return;
+        _game.SetLevel(level);
+        await Roll();
+    }
+
+    private async Task Roll()
+    {
+        if (_rolling) return;
+
+        _rolling = true;
+        _solved = false;
+        _lastWrong = null;
+        _wrongPicks.Clear();
+
+        // Tumble through a few random faces before landing on the real roll.
+        for (var i = 0; i < 8; i++)
+        {
+            _shownDice = _game.RollDice();
+            StateHasChanged();
+            await Task.Delay(70);
+        }
+
+        _game.NewRound();
+        _shownDice = _game.Dice;
+        _rolling = false;
+    }
+
+    private void Pick(int choice)
+    {
+        if (_game.IsCorrect(choice))
+        {
+            _solved = true;
+            _lastWrong = null;
+            _stars++;
+        }
+        else
+        {
+            _wrongPicks.Add(choice);
+            _lastWrong = choice;
+        }
+    }
+}
