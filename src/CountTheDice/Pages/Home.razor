@@ -1,13 +1,20 @@
 ﻿@page "/"
 @using CountTheDice.Game
 @using CountTheDice.Shared
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <PageTitle>Count the Dice</PageTitle>
 
 <main class="game">
     <header class="title">
         <h1>Count the Dice!</h1>
-        <div class="stars" aria-label="@_stars stars">⭐ @_stars</div>
+        <div class="title-right">
+            <button class="sound-btn" @onclick="ToggleSound" aria-label="@(_muted ? "Turn sound on" : "Turn sound off")">
+                @(_muted ? "🔇" : "🔊")
+            </button>
+            <div class="stars" aria-label="@_stars stars">⭐ @_stars</div>
+        </div>
     </header>
 
     <nav class="levels" aria-label="Choose level">
@@ -77,6 +84,8 @@
     private static readonly string[] DieColors = ["#ff6b6b", "#4dabf7", "#51cf66"];
 
     private readonly DiceGame _game = new();
+    private IJSObjectReference? _sounds;
+    private bool _muted;
     private readonly HashSet<int> _wrongPicks = [];
     private int[] _shownDice = [];
     private bool _rolling;
@@ -85,6 +94,31 @@
     private int _stars;
 
     protected override async Task OnInitializedAsync() => await Roll();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _sounds = await JS.InvokeAsync<IJSObjectReference>("import", "./js/sounds.js");
+        _muted = await _sounds.InvokeAsync<bool>("isMuted");
+        StateHasChanged();
+    }
+
+    private async Task ToggleSound()
+    {
+        _muted = !_muted;
+        if (_sounds is not null) await _sounds.InvokeVoidAsync("setMuted", _muted);
+    }
+
+    private async Task PlaySound(string name)
+    {
+        if (_muted || _sounds is null) return;
+        await _sounds.InvokeVoidAsync(name);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_sounds is not null) await _sounds.DisposeAsync();
+    }
 
     private async Task ChangeLevel(GameLevel level)
     {
@@ -115,18 +149,20 @@
         _rolling = false;
     }
 
-    private void Pick(int choice)
+    private async Task Pick(int choice)
     {
         if (_game.IsCorrect(choice))
         {
             _solved = true;
             _lastWrong = null;
             _stars++;
+            await PlaySound("playSuccess");
         }
         else
         {
             _wrongPicks.Add(choice);
             _lastWrong = choice;
+            await PlaySound("playTryAgain");
         }
     }
 }

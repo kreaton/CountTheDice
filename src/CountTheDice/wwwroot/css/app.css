@@ -131,6 +131,24 @@ button:disabled { cursor: default; }
     white-space: nowrap;
 }
 
+.title-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.sound-btn {
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 50%;
+    background: var(--card);
+    font-size: 1.4rem;
+    line-height: 1;
+    box-shadow: var(--shadow);
+}
+
+.sound-btn:active { transform: translateY(0.25rem); box-shadow: var(--shadow-pressed); }
+
 /* ---------- Level picker ---------- */
 
 .levels {
