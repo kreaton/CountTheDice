@@ -9,9 +9,7 @@
       "applicationUrl": "http://localhost:5012",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "commandLineArgs": "--pathbase=/countthedice",
-      "launchUrl": "countthedice"
+      }
     },
     "https": {
       "commandName": "Project",
