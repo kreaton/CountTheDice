@@ -4,31 +4,31 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<PageTitle>Count the Dice</PageTitle>
+<PageTitle>Tæl terningerne</PageTitle>
 
 <main class="game">
     <header class="title">
-        <h1>Count the Dice!</h1>
+        <h1>Tæl terningerne!</h1>
         <div class="title-right">
-            <button class="sound-btn" @onclick="ToggleSound" aria-label="@(_muted ? "Turn sound on" : "Turn sound off")">
+            <button class="sound-btn" @onclick="ToggleSound" aria-label="@(_muted ? "Slå lyden til" : "Slå lyden fra")">
                 @(_muted ? "🔇" : "🔊")
             </button>
-            <div class="stars" aria-label="@_stars stars">⭐ @_stars</div>
+            <div class="stars" aria-label="@_stars stjerner">⭐ @_stars</div>
         </div>
     </header>
 
-    <nav class="levels" aria-label="Choose level">
+    <nav class="levels" aria-label="Vælg niveau">
         @foreach (var level in DiceGame.Levels)
         {
             <button class="level-btn level-@level.Number @(level == _game.Level ? "active" : "")"
                     @onclick="() => ChangeLevel(level)" disabled="@_rolling">
                 @level.Name
-                <small>@level.DiceCount dice</small>
+                <small>@level.DiceCount terninger</small>
             </button>
         }
     </nav>
 
-    <section class="dice-tray" @onclick="Roll" title="Tap to roll new dice">
+    <section class="dice-tray" @onclick="Roll" title="Tryk for at slå med terningerne">
         @for (var i = 0; i < _shownDice.Length; i++)
         {
             <Die Value="_shownDice[i]" Rolling="_rolling" Color="@DieColors[i % DieColors.Length]" />
@@ -36,7 +36,7 @@
     </section>
 
     <div class="answers">
-    <p class="question">How many dots are there in total?</p>
+    <p class="question">Hvor mange øjne er der i alt?</p>
 
     <section class="choices">
         @foreach (var choice in _game.Choices)
@@ -55,19 +55,21 @@
         {
             <div class="message success">
                 <span class="big-emoji">🎉</span>
-                <span>Super! @_game.Sum is right!</span>
+                <span>Super! @_game.Sum er rigtigt!</span>
             </div>
-            <button class="roll-btn" @onclick="Roll">🎲 Roll again!</button>
+            <button class="roll-btn" @onclick="Roll">🎲 Slå igen!</button>
         }
         else if (_lastWrong is not null)
         {
             <div class="message try-again" @key="_wrongPicks.Count">
                 <span class="big-emoji">🤔</span>
-                <span>Not @_lastWrong. Try again!</span>
+                <span>Ikke @_lastWrong. Prøv igen!</span>
             </div>
         }
     </section>
     </div>
+
+    <footer class="credits">Lavet med kærlighed 💛 (c) 2026 Per Hejndorf, Kreaton – @BuildInfo.Display</footer>
 </main>
 
 @code {

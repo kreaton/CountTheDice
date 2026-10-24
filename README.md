@@ -1,6 +1,6 @@
 # Count the Dice
 
-A small counting game for young children. The game rolls a few dice, and the child counts the dots and taps the matching total among ten number buttons. A right answer gets a happy sound and a star. A wrong answer gets a gentle "try again", and that button is greyed out.
+A small counting game for young children. The game rolls a few dice, and the child counts the dots and taps the matching total among ten number buttons. A right answer gets a happy sound and a star. A wrong answer gets a gentle "Prøv igen!" (try again), and that button is greyed out.
 
 It is a Blazor WebAssembly app (.NET 10) that runs entirely in the browser, with no server-side code. It works on phones and tablets and can be added to the home screen as an app (PWA manifest and Apple touch icons included).
 
@@ -12,7 +12,7 @@ It is a Blazor WebAssembly app (.NET 10) that runs entirely in the browser, with
 | 2     | 3    | 2–18                 |
 | 3     | 3    | 2–24                 |
 
-Each round shows 10 choices: the correct sum plus 9 random wrong numbers from the level's range. Tap the dice tray (or "Roll again!") to roll new dice.
+Each round shows 10 choices: the correct sum plus 9 random wrong numbers from the level's range. Tap the dice tray (or "Slå igen!") to roll new dice.
 
 ## Running locally
 
@@ -24,7 +24,7 @@ The app is served under the `/countthedice` path, so open http://localhost:5012/
 
 ## Publishing
 
-Run `src/CountTheDice/Publish.bat`, or:
+Publish with:
 
 ```bash
 dotnet publish src/CountTheDice -c Release -o src/CountTheDice/bin/Publish

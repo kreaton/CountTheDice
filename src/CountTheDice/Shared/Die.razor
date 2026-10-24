@@ -1,5 +1,5 @@
 @* A single die face drawn with CSS pips on a 3x3 grid. *@
-<div class="die die-@Value @(Rolling ? "rolling" : "")" style="--die-color: @Color" role="img" aria-label="Die showing @Value">
+<div class="die die-@Value @(Rolling ? "rolling" : "")" style="--die-color: @Color" role="img" aria-label="Terning der viser @Value">
     @for (var cell = 0; cell < 9; cell++)
     {
         <span class="pip @(Pips[Value].Contains(cell) ? "on" : "")"></span>

@@ -1,6 +1,6 @@
 {
-  "name": "Count the Dice",
-  "short_name": "Count Dice",
+  "name": "Tæl terningerne",
+  "short_name": "Terninger",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

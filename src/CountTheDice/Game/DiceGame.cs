@@ -8,9 +8,9 @@ public sealed class DiceGame
 
     public static readonly IReadOnlyList<GameLevel> Levels =
     [
-        new(1, "Level 1", DiceCount: 2, MinChoice: 2, MaxChoice: 12),
-        new(2, "Level 2", DiceCount: 3, MinChoice: 2, MaxChoice: 18),
-        new(3, "Level 3", DiceCount: 3, MinChoice: 2, MaxChoice: 24),
+        new(1, "Niveau 1", DiceCount: 2, MinChoice: 2, MaxChoice: 12),
+        new(2, "Niveau 2", DiceCount: 3, MinChoice: 2, MaxChoice: 18),
+        new(3, "Niveau 3", DiceCount: 3, MinChoice: 2, MaxChoice: 24),
     ];
 
     private readonly Random _random;
