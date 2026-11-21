@@ -12,6 +12,8 @@
 
 **A small counting game for young children.**
 
+▶️ **Play it:** <https://kreaton.github.io/KidsGames/countthedice/>
+
 The game rolls a few dice, and the child counts the dots and taps the matching total among ten number buttons. A right answer gets a happy sound and a star. A wrong answer gets a gentle "Prøv igen!" (try again), and that button is greyed out.
 
 It is a Blazor WebAssembly app (.NET 10) that runs entirely in the browser, with no server-side code. It works on phones and tablets and can be added to the home screen as an app (PWA manifest and Apple touch icons included).
